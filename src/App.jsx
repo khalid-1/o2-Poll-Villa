@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import heroImage from './assets/image.png';
+import o2VillaImage from './assets/o2_villa.png';
 import {
     Wind,
     Droplets,
@@ -149,9 +150,9 @@ const VILLAS = [
         beds: 4,
         baths: 3,
         images: [
-            heroImage,
-            heroImage,
-            heroImage
+            o2VillaImage,
+            o2VillaImage,
+            o2VillaImage
         ],
         amenities: ["Private Pool", "Fast Wifi", "Smart TV", "Free Parking", "Kitchen"]
     },
@@ -479,92 +480,48 @@ const AvailabilityCalendar = () => {
 };
 
 const ContactSection = () => (
-    <div className="bg-gray-50 rounded-3xl p-6 md:p-12">
-        <div className="grid md:grid-cols-2 gap-12">
-            <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">Contact Us</h2>
-                <p className="text-gray-600 mb-8 leading-relaxed">
-                    Have questions about the villa or the local area? We're here to help make your stay perfect.
-                    Reach out directly for the best rates.
-                </p>
+    <div className="bg-gray-50 rounded-3xl p-8 md:p-16 text-center max-w-4xl mx-auto">
+        <h2 className="text-3xl font-bold text-gray-900 mb-6">Contact Us</h2>
+        <p className="text-gray-600 mb-12 leading-relaxed max-w-2xl mx-auto">
+            Have questions about the villa or the local area? We're here to help make your stay perfect.
+            Reach out directly for the best rates.
+        </p>
 
-                <div className="space-y-6">
-                    <div className="flex items-start gap-4">
-                        <div className="p-3 bg-white rounded-full shadow-sm text-cyan-600">
-                            <MapPin size={20} />
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-gray-900">Location</h3>
-                            <p className="text-gray-500">3 Al Marasi St - Al Jazeera Al Hamra<br />Ras Al Khaimah</p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-start gap-4">
-                        <div className="p-3 bg-white rounded-full shadow-sm text-cyan-600">
-                            <Mail size={20} />
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-gray-900">Email</h3>
-                            <p className="text-gray-500">reservations@o2poolvilla.com</p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-start gap-4">
-                        <div className="p-3 bg-white rounded-full shadow-sm text-cyan-600">
-                            <Phone size={20} />
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-gray-900">Phone</h3>
-                            <p className="text-gray-500">+971 50 400 0576</p>
-                        </div>
-                    </div>
+        <div className="grid sm:grid-cols-3 gap-8 md:gap-12 items-start">
+            <div className="flex flex-col items-center">
+                <div className="p-4 bg-white rounded-2xl shadow-premium text-cyan-600 mb-4">
+                    <MapPin size={28} />
                 </div>
-
-                <div className="flex gap-4 mt-8">
-                    <a href="https://www.instagram.com/o2poolvilla/" target="_blank" rel="noopener noreferrer"
-                        className="p-3 bg-white rounded-full text-gray-600 hover:text-cyan-600 hover:shadow-md transition-all inline-flex items-center justify-center">
-                        <Instagram size={24} />
-                    </a>
-                    <button
-                        className="p-3 bg-white rounded-full text-gray-600 hover:text-cyan-600 hover:shadow-md transition-all">
-                        <Facebook size={24} />
-                    </button>
-                </div>
+                <h3 className="font-bold text-gray-900 mb-1">Location</h3>
+                <p className="text-gray-500 text-sm">3 Al Marasi St - Al Jazeera Al Hamra<br />Ras Al Khaimah</p>
             </div>
 
-            <form className="bg-white p-10 rounded-3xl shadow-premium border border-gray-100" onSubmit={(e) =>
-                e.preventDefault()}>
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                        <input type="text"
-                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all"
-                            placeholder="John" />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                        <input type="text"
-                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all"
-                            placeholder="Doe" />
-                    </div>
+            <div className="flex flex-col items-center">
+                <div className="p-4 bg-white rounded-2xl shadow-premium text-cyan-600 mb-4">
+                    <Mail size={28} />
                 </div>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email"
-                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all"
-                        placeholder="john@example.com" />
+                <h3 className="font-bold text-gray-900 mb-1">Email</h3>
+                <p className="text-gray-500 text-sm">reservations@o2poolvilla.com</p>
+            </div>
+
+            <div className="flex flex-col items-center">
+                <div className="p-4 bg-white rounded-2xl shadow-premium text-cyan-600 mb-4">
+                    <Phone size={28} />
                 </div>
-                <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                    <textarea
-                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all h-32 resize-none"
-                        placeholder="I'm interested in booking..." />
-                </div>
-                <button
-                    className="w-full py-4 bg-gray-900 text-white rounded-lg font-bold hover:bg-cyan-600 transition-colors">
-                    Send Message
-                </button>
-            </form>
+                <h3 className="font-bold text-gray-900 mb-1">Phone</h3>
+                <p className="text-gray-500 text-sm">+971 50 400 0576</p>
+            </div>
+        </div>
+
+        <div className="flex justify-center gap-6 mt-12">
+            <a href="https://www.instagram.com/o2poolvilla/" target="_blank" rel="noopener noreferrer"
+                className="p-4 bg-white rounded-2xl text-gray-600 shadow-premium hover:text-cyan-600 hover:shadow-premium-hover transition-all inline-flex items-center justify-center">
+                <Instagram size={32} />
+            </a>
+            <button
+                className="p-4 bg-white rounded-2xl text-gray-600 shadow-premium hover:text-cyan-600 hover:shadow-premium-hover transition-all">
+                <Facebook size={32} />
+            </button>
         </div>
     </div>
 );
