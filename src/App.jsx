@@ -20,8 +20,119 @@ import {
     Phone,
     Instagram,
     Facebook,
-    ArrowUp
+    ArrowUp,
+    Utensils,
+    Mountain,
+    Waves,
+    Lock,
+    Key,
+    Shield
 } from 'lucide-react';
+
+const CATEGORIZED_AMENITIES = [
+    {
+        category: "Scenic views",
+        items: [
+            { icon: Mountain, label: "Mountain view" },
+            { icon: Waves, label: "Pool view" },
+            { icon: Droplets, label: "Garden view" }
+        ]
+    },
+    {
+        category: "Bathroom",
+        items: [
+            { icon: Droplets, label: "Bathtub" },
+            { icon: Wind, label: "Hair dryer" },
+            { icon: Star, label: "Cleaning products" },
+            { icon: Droplets, label: "Shampoo & Conditioner" },
+            { icon: Droplets, label: "Hot water" }
+        ]
+    },
+    {
+        category: "Bedroom & laundry",
+        items: [
+            { icon: Wind, label: "Washer" },
+            { icon: CheckIcon, label: "Essentials (Towels, bed sheets, soap, toilet paper)" },
+            { icon: CheckIcon, label: "Hangers" },
+            { icon: CheckIcon, label: "Bed linens" },
+            { icon: CheckIcon, label: "Extra pillows and blankets" },
+            { icon: CheckIcon, label: "Room-darkening shades" },
+            { icon: CheckIcon, label: "Iron" },
+            { icon: Shield, label: "Safe" },
+            { icon: CheckIcon, label: "Wardrobe" }
+        ]
+    },
+    {
+        category: "Entertainment",
+        items: [
+            { icon: Tv, label: "55\" HDTV with Netflix, premium cable" },
+            { icon: Wifi, label: "Sound system" },
+            { icon: Users, label: "Pool table" }
+        ]
+    },
+    {
+        category: "Heating and cooling",
+        items: [
+            { icon: Wind, label: "Central air conditioning" },
+            { icon: Wind, label: "Ceiling fan" }
+        ]
+    },
+    {
+        category: "Internet and office",
+        items: [
+            { icon: Wifi, label: "Fast wifi – 502 Mbps" },
+            { icon: Coffee, label: "Dedicated workspace" }
+        ]
+    },
+    {
+        category: "Kitchen and dining",
+        items: [
+            { icon: Utensils, label: "Kitchen" },
+            { icon: Utensils, label: "Refrigerator" },
+            { icon: Utensils, label: "Microwave" },
+            { icon: Utensils, label: "Cooking basics" },
+            { icon: Utensils, label: "Dishes and silverware" },
+            { icon: Utensils, label: "Freezer" },
+            { icon: Utensils, label: "Dishwasher" },
+            { icon: Utensils, label: "Stove & Oven" },
+            { icon: Coffee, label: "Coffee maker" },
+            { icon: Utensils, label: "Toaster" },
+            { icon: Utensils, label: "BBQ grill" },
+            { icon: Utensils, label: "Dining table" }
+        ]
+    },
+    {
+        category: "Location features",
+        items: [
+            { icon: Key, label: "Private entrance" },
+            { icon: MapPin, label: "Resort access" }
+        ]
+    },
+    {
+        category: "Outdoor",
+        items: [
+            { icon: Coffee, label: "Private patio or balcony" },
+            { icon: Droplets, label: "Private backyard" },
+            { icon: Coffee, label: "Outdoor furniture" },
+            { icon: Utensils, label: "Outdoor dining area" }
+        ]
+    },
+    {
+        category: "Parking and facilities",
+        items: [
+            { icon: Car, label: "Free driveway parking on premises – 2 spaces" },
+            { icon: Droplets, label: "Private outdoor pool - infinity, open 24 hours" }
+        ]
+    },
+    {
+        category: "Services",
+        items: [
+            { icon: Key, label: "Self check-in" },
+            { icon: Lock, label: "Smart lock" },
+            { icon: Calendar, label: "Long term stays allowed" }
+        ]
+    }
+];
 
 // --- Mock Data ---
 
@@ -486,6 +597,7 @@ export default function App() {
     const [activeTab, setActiveTab] = useState('home');
     const [isScrolled, setIsScrolled] = useState(false);
     const [showScrollTop, setShowScrollTop] = useState(false);
+    const [isAmenitiesModalOpen, setIsAmenitiesModalOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -499,6 +611,15 @@ export default function App() {
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
+
+    // Prevent scrolling when modal is open
+    useEffect(() => {
+        if (isAmenitiesModalOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+    }, [isAmenitiesModalOpen]);
 
     return (
         <div className="min-h-screen bg-white font-sans text-gray-900 selection:bg-cyan-100">
@@ -526,33 +647,59 @@ export default function App() {
 
                         {/* Amenities Highlights */}
                         {/* Airbnb-style Amenities Section */}
-                        <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
-                            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">What this place offers</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-16">
-                                {[
-                                    { icon: Droplets, label: "Private outdoor pool - available all year, open 24 hours, infinity" },
-                                    { icon: Wifi, label: "Fast wifi – 502 Mbps" },
-                                    { icon: Car, label: "Free driveway parking on premises – 2 spaces" },
-                                    { icon: Tv, label: "55\" HDTV with Netflix, premium cable, standard cable" },
-                                    { icon: Wind, label: "Central air conditioning" },
-                                    { icon: Coffee, label: "Kitchen" },
-                                    { icon: Users, label: "Private entrance" },
-                                    { icon: Calendar, label: "Long term stays allowed" },
-                                ].map((item, idx) => (
-                                    <div key={idx} className="flex items-start gap-4 p-4 border-b border-gray-100 last:border-0 hover:bg-gray-50 rounded-lg transition-colors">
-                                        <div className="text-gray-900 mt-1">
-                                            <item.icon size={28} strokeWidth={1.5} />
+                        {/* Airbnb-style Amenities Section */}
+                        <div className="max-w-7xl mx-auto px-4 py-16 md:py-24 border-t border-gray-100">
+                            <h2 className="text-2xl font-bold text-gray-900 mb-6">What this place offers</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-16 mb-8">
+                                {CATEGORIZED_AMENITIES.flatMap(cat => cat.items).slice(0, 10).map((item, idx) => (
+                                    <div key={idx} className="flex items-center gap-4 py-2">
+                                        <div className="text-gray-900 min-w-8">
+                                            <item.icon size={24} strokeWidth={1} />
                                         </div>
-                                        <span className="text-gray-700 text-lg font-light leading-snug">{item.label}</span>
+                                        <span className="text-gray-700 text-base font-light">{item.label}</span>
                                     </div>
                                 ))}
                             </div>
-                            <div className="mt-8">
-                                <button className="px-6 py-3 border border-black rounded-lg font-semibold hover:bg-gray-50 transition-colors">
-                                    Show all 32 amenities
-                                </button>
-                            </div>
+                            <button
+                                onClick={() => setIsAmenitiesModalOpen(true)}
+                                className="px-6 py-3 border border-gray-900 rounded-lg font-semibold hover:bg-gray-50 transition-colors text-sm tracking-wide"
+                            >
+                                Show all {CATEGORIZED_AMENITIES.reduce((acc, cat) => acc + cat.items.length, 0)} amenities
+                            </button>
                         </div>
+
+                        {/* Amenities Modal */}
+                        {isAmenitiesModalOpen && (
+                            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+                                <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsAmenitiesModalOpen(false)} />
+                                <div className="bg-white w-full max-w-2xl max-h-[85vh] rounded-2xl shadow-2xl relative flex flex-col animate-in fade-in zoom-in-95 duration-200">
+                                    <div className="flex items-center justify-between p-6 border-b border-gray-100">
+                                        <button onClick={() => setIsAmenitiesModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                                            <X size={20} />
+                                        </button>
+                                        <h3 className="text-lg font-bold">What this place offers</h3>
+                                        <div className="w-9" /> {/* Spacer for centering */}
+                                    </div>
+                                    <div className="overflow-y-auto p-6 md:p-8 space-y-8">
+                                        {CATEGORIZED_AMENITIES.map((category, idx) => (
+                                            <div key={idx}>
+                                                <h4 className="font-bold text-gray-900 mb-4 text-base">{category.category}</h4>
+                                                <div className="space-y-4 border-b border-gray-100 pb-6 last:border-0 last:pb-0">
+                                                    {category.items.map((item, itemIdx) => (
+                                                        <div key={itemIdx} className="flex items-start gap-4">
+                                                            <div className="text-gray-500 mt-0.5">
+                                                                <item.icon size={24} strokeWidth={1} />
+                                                            </div>
+                                                            <span className="text-gray-700 font-light">{item.label}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         <div className="max-w-4xl mx-auto px-4 py-16 md:py-24">
                             <ContactSection />
