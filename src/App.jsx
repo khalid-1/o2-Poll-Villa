@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import {
     addDays,
     format,
@@ -44,6 +45,10 @@ import {
     Key,
     Shield
 } from 'lucide-react';
+
+import BookingCalendar from './components/BookingCalendar';
+import { GlowingCard } from './components/ui/SpotlightCard';
+import { FadeInWhenVisible, StaggerContainer, StaggerItem } from './components/ui/AnimatedButton';
 
 const CATEGORIZED_AMENITIES = [
     {
@@ -204,144 +209,248 @@ const MOCK_BOOKED_DATES = [
 const Navigation = ({ activeTab, setActiveTab, isScrolled }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    const isSolid = isScrolled || activeTab !== 'home' || isMobileMenuOpen;
+    const isSolid = isScrolled || activeTab !== 'home';
+
+    // Prevent body scroll when menu is open
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+    }, [isMobileMenuOpen]);
+
+    const menuVariants = {
+        closed: {
+            opacity: 0,
+            backdropFilter: "blur(0px)",
+            transition: { duration: 0.3 }
+        },
+        open: {
+            opacity: 1,
+            backdropFilter: "blur(16px)",
+            transition: { duration: 0.3 }
+        }
+    };
+
+    const containerVariants = {
+        closed: { x: "100%", transition: { ease: "easeInOut", duration: 0.4 } },
+        open: {
+            x: 0,
+            transition: {
+                ease: "easeOut",
+                duration: 0.4,
+                staggerChildren: 0.1,
+                delayChildren: 0.2
+            }
+        }
+    };
+
+    const itemVariants = {
+        closed: { opacity: 0, y: 20 },
+        open: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+    };
 
     return (
-        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isSolid ? 'bg-white shadow-md py-4'
-            : 'bg-transparent py-6'}`}>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                <div className="flex items-center cursor-pointer group" onClick={() => setActiveTab('home')}>
-                    <span className={`text-2xl font-bold tracking-tight ${isSolid ? 'text-gray-900' : 'text-white'}`}>
-                        O<span className="text-xs align-baseline relative top-1">2</span> <span className={isSolid ? 'text-cyan-600' : 'text-cyan-300'}>Pool Villa</span>
-                    </span>
-                </div>
+        <>
+            <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isSolid ? 'bg-white shadow-md py-4'
+                : 'bg-transparent py-6'}`}>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                    <div className="flex items-center cursor-pointer group" onClick={() => setActiveTab('home')}>
+                        <span className={`text-2xl font-bold tracking-tight ${isSolid ? 'text-gray-900' : 'text-white'}`}>
+                            O<span className="text-xs align-baseline relative top-1">2</span> <span className={isSolid ? 'text-cyan-600' : 'text-cyan-300'}>Pool Villa</span>
+                        </span>
+                    </div>
 
-                {/* Desktop Menu */}
-                <div className="hidden md:flex space-x-8 items-center">
-                    {['home', 'villas', 'availability', 'contact'].map((item) => (
-                        <button key={item} onClick={() => setActiveTab(item)}
-                            className={`text-sm font-medium hover:text-cyan-500 transition-colors capitalize ${activeTab === item
-                                ? 'text-cyan-500'
-                                : (isSolid ? 'text-gray-600' : 'text-white/90')
-                                }`}
-                        >
-                            {item}
+                    {/* Desktop Menu */}
+                    <div className="hidden md:flex space-x-8 items-center">
+                        {['home', 'villas', 'availability', 'contact'].map((item) => (
+                            <button key={item} onClick={() => setActiveTab(item)}
+                                className={`text-sm font-medium hover:text-cyan-500 transition-colors capitalize ${activeTab === item
+                                    ? 'text-cyan-500'
+                                    : (isSolid ? 'text-gray-600' : 'text-white/90')
+                                    }`}
+                            >
+                                {item}
+                            </button>
+                        ))}
+                        <button
+                            className="bg-cyan-600 hover:bg-cyan-700 text-white px-5 py-2 rounded-full font-medium transition-all transform hover:scale-105 shadow-lg">
+                            Book Now
                         </button>
-                    ))}
-                    <button
-                        className="bg-cyan-600 hover:bg-cyan-700 text-white px-5 py-2 rounded-full font-medium transition-all transform hover:scale-105 shadow-lg">
-                        Book Now
-                    </button>
-                </div>
+                    </div>
 
-                <div className="md:hidden">
-                    <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className={`p-2 rounded-md ${isSolid ? 'text-gray-900' : 'text-white'}`}
-                    >
-                        {isMobileMenuOpen ?
-                            <X size={24} /> :
-                            <Menu size={24} />}
-                    </button>
+                    <div className="md:hidden">
+                        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className={`p-2 rounded-md transition-colors relative z-[60] ${isMobileMenuOpen ? 'text-gray-900' : (isSolid ? 'text-gray-900' : 'text-white')}`}
+                        >
+                            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </nav>
 
             {/* Full Screen Mobile Menu Overlay */}
-            {isMobileMenuOpen && (
-                <div className="fixed inset-0 z-[100] bg-white animate-in fade-in duration-300 pointer-events-auto">
-                    {/* Header inside menu */}
-                    <div className="flex justify-between items-center px-4 py-4 border-b border-gray-50">
-                        <div className="flex items-center" onClick={() => { setActiveTab('home'); setIsMobileMenuOpen(false); }}>
-                            <span className="text-2xl font-bold tracking-tight text-gray-900">
-                                O<span className="text-xs align-baseline relative top-1">2</span> <span className="text-cyan-600">Pool Villa</span>
-                            </span>
-                        </div>
-                        <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-gray-900 hover:bg-gray-50 rounded-full transition-colors">
-                            <X size={32} strokeWidth={1.5} />
-                        </button>
-                    </div>
-
-                    {/* Menu Content */}
-                    <div className="h-full flex flex-col justify-center items-center px-6 pb-32">
-                        <div className="flex flex-col items-center space-y-8 mb-12">
-                            {['home', 'villas', 'availability', 'contact'].map((item, idx) => (
-                                <button
-                                    key={item}
-                                    onClick={() => {
-                                        setActiveTab(item);
-                                        setIsMobileMenuOpen(false);
-                                    }}
-                                    className={`text-4xl font-bold capitalize transition-all duration-300 hover:scale-110 ${activeTab === item ? 'text-cyan-600' : 'text-gray-900'
-                                        }`}
-                                    style={{ animationDelay: `${idx * 100}ms` }}
-                                >
-                                    {item}
-                                </button>
-                            ))}
-                        </div>
-
-                        <button
-                            onClick={() => {
-                                setActiveTab('availability');
-                                setIsMobileMenuOpen(false);
-                            }}
-                            className="bg-cyan-600 text-white py-4 px-12 rounded-full font-bold text-xl shadow-xl shadow-cyan-100 flex items-center gap-3 transition-transform hover:scale-105 active:scale-95"
+            <AnimatePresence>
+                {isMobileMenuOpen && (
+                    <motion.div
+                        initial="closed"
+                        animate="open"
+                        exit="closed"
+                        variants={menuVariants}
+                        className="fixed inset-0 z-50 bg-white/90"
+                    >
+                        {/* Menu Content */}
+                        <motion.div
+                            className="h-full flex flex-col justify-center items-center px-6 pb-32"
+                            variants={containerVariants}
                         >
-                            <Calendar size={24} />
-                            Book Your Stay
-                        </button>
+                            <div className="flex flex-col items-center space-y-8 mb-12">
+                                {['home', 'villas', 'availability', 'contact'].map((item) => (
+                                    <motion.button
+                                        key={item}
+                                        variants={itemVariants}
+                                        onClick={() => {
+                                            setActiveTab(item);
+                                            setIsMobileMenuOpen(false);
+                                        }}
+                                        className={`text-4xl font-bold capitalize transition-all duration-300 ${activeTab === item ? 'text-cyan-600' : 'text-gray-900'}`}
+                                        whileHover={{ scale: 1.1, color: "#0891b2" }}
+                                        whileTap={{ scale: 0.95 }}
+                                    >
+                                        {item}
+                                    </motion.button>
+                                ))}
+                            </div>
 
-                        <div className="absolute bottom-12 flex gap-8">
-                            <a href="https://www.instagram.com/o2poolvilla/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-600 transition-colors">
-                                <Instagram size={32} />
-                            </a>
-                            <button className="text-gray-400 hover:text-cyan-600 transition-colors">
-                                <Facebook size={32} />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </nav>
+                            <motion.button
+                                variants={itemVariants}
+                                onClick={() => {
+                                    setActiveTab('availability');
+                                    setIsMobileMenuOpen(false);
+                                }}
+                                className="bg-cyan-600 text-white py-4 px-12 rounded-full font-bold text-xl shadow-xl shadow-cyan-200/50 flex items-center gap-3"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <Calendar size={24} />
+                                Book Your Stay
+                            </motion.button>
+
+                            <motion.div
+                                variants={itemVariants}
+                                className="absolute bottom-12 flex gap-8"
+                            >
+                                <a href="https://www.instagram.com/o2poolvilla/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-600 transition-colors">
+                                    <Instagram size={32} />
+                                </a>
+                                <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-600 transition-colors">
+                                    <Facebook size={32} />
+                                </a>
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     );
 };
 
-const Hero = ({ setActiveTab }) => (
-    <div className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-            <img src={heroImage}
-                alt="O2 Pool Villa Hero" className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
-        </div>
+const Hero = ({ setActiveTab }) => {
+    const { scrollY } = useScroll();
+    const y = useTransform(scrollY, [0, 500], [0, 150]);
+    const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
-            <h1 className="text-4xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
-                Breathe in the <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-200">Luxury</span>
-            </h1>
-            <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-                Experience the perfect element of relaxation at O2 Pool Villa.
-                Your private sanctuary where modern design meets natural serenity.
-            </p>
+    return (
+        <div className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
+            {/* Parallax Background */}
+            <motion.div className="absolute inset-0 z-0" style={{ y }}>
+                <img src={heroImage}
+                    alt="O2 Pool Villa Hero" className="w-full h-full object-cover scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+            </motion.div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button onClick={() => setActiveTab('villas')}
-                    className="w-full sm:w-auto px-8 py-4 bg-white text-gray-900 rounded-full font-bold hover:bg-gray-100
-                transition-all transform hover:scale-105 shadow-xl flex items-center justify-center gap-2"
-                >
-                    View Villas
-                </button>
-                <button onClick={() => setActiveTab('availability')}
-                    className="w-full sm:w-auto px-8 py-4 bg-cyan-600/90 backdrop-blur-sm text-white rounded-full font-bold
-                hover:bg-cyan-600 transition-all transform hover:scale-105 shadow-xl flex items-center justify-center
-                gap-2"
-                >
-                    <Calendar size={20} />
-                    Check Dates
-                </button>
+            {/* Animated Spotlight Effect */}
+            <div className="absolute inset-0 z-[1] pointer-events-none">
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl animate-pulse-glow" />
+                <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl animate-float" />
             </div>
+
+            <motion.div
+                className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16"
+                style={{ opacity }}
+            >
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
+                >
+                    <h1 className="text-4xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
+                        Breathe in the <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-cyan-400 to-blue-200 animate-gradient-text">Luxury</span>
+                    </h1>
+                </motion.div>
+
+                <motion.p
+                    className="text-xl text-white/90 mb-10 max-w-2xl mx-auto font-light leading-relaxed"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.4, 0.25, 1] }}
+                >
+                    Experience the perfect element of relaxation at O2 Pool Villa.
+                    Your private sanctuary where modern design meets natural serenity.
+                </motion.p>
+
+                <motion.div
+                    className="flex flex-col sm:flex-row items-center justify-center gap-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.4, ease: [0.25, 0.4, 0.25, 1] }}
+                >
+                    <motion.button
+                        onClick={() => setActiveTab('villas')}
+                        className="w-full sm:w-auto px-8 py-4 bg-white text-gray-900 rounded-full font-bold shadow-xl flex items-center justify-center gap-2"
+                        whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(0,0,0,0.2)" }}
+                        whileTap={{ scale: 0.98 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    >
+                        View Villas
+                    </motion.button>
+                    <motion.button
+                        onClick={() => setActiveTab('availability')}
+                        className="w-full sm:w-auto px-8 py-4 bg-cyan-600/90 backdrop-blur-sm text-white rounded-full font-bold shadow-xl flex items-center justify-center gap-2"
+                        whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(34, 211, 238, 0.3)" }}
+                        whileTap={{ scale: 0.98 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    >
+                        <Calendar size={20} />
+                        Check Dates
+                    </motion.button>
+                </motion.div>
+            </motion.div>
+
+            {/* Scroll indicator */}
+            <motion.div
+                className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1 }}
+            >
+                <motion.div
+                    className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center p-2"
+                    animate={{ y: [0, 5, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                    <motion.div
+                        className="w-1.5 h-1.5 bg-white rounded-full"
+                        animate={{ y: [0, 12, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                </motion.div>
+            </motion.div>
         </div>
-    </div>
-);
+    );
+};
 
 const ImageCarousel = ({ images }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -384,9 +493,19 @@ const ImageCarousel = ({ images }) => {
     );
 };
 
-const VillaCard = ({ villa }) => (
-    <div
-        className="bg-white rounded-3xl overflow-hidden shadow-premium hover:shadow-premium-hover transition-all duration-500 border border-gray-100 group hover:-translate-y-1">
+const VillaCard = ({ villa, index = 0 }) => (
+    <motion.div
+        className="bg-white rounded-3xl overflow-hidden shadow-premium hover:shadow-premium-hover transition-shadow duration-500 border border-gray-100 group"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{
+            duration: 0.6,
+            delay: index * 0.15,
+            ease: [0.25, 0.4, 0.25, 1]
+        }}
+        whileHover={{ y: -8 }}
+    >
         <ImageCarousel images={villa.images} />
 
         <div className="p-6">
@@ -426,223 +545,38 @@ const VillaCard = ({ villa }) => (
                     <span className="text-xl font-bold text-gray-900">AED {villa.price}</span>
                     <span className="text-gray-500 text-sm font-medium"> / night</span>
                 </div>
-                <button
-                    className="px-5 py-2.5 md:px-6 md:py-3 bg-gray-900 text-white rounded-xl font-bold text-xs md:text-sm hover:bg-cyan-600 transition-colors shadow-lg hover:shadow-cyan-200">
+                <motion.button
+                    className="px-5 py-2.5 md:px-6 md:py-3 bg-gray-900 text-white rounded-xl font-bold text-xs md:text-sm shadow-lg"
+                    whileHover={{ scale: 1.05, backgroundColor: "#0891b2" }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
                     View Details
-                </button>
+                </motion.button>
             </div>
+        </div>
+    </motion.div>
+);
+
+const AvailabilitySection = ({ setActiveTab }) => (
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <BookingCalendar bookedDatesRaw={MOCK_BOOKED_DATES} />
+
+        <div className="mt-16 max-w-3xl mx-auto text-center bg-gray-50 p-8 rounded-3xl border border-gray-100">
+            <h3 className="font-bold text-lg mb-2">Need help with your dates?</h3>
+            <p className="text-gray-600 mb-6 font-light">
+                Sometimes we have cancellations or waiting lists. Contact us directly to double check availability for your preferred dates.
+            </p>
+            <button
+                onClick={() => setActiveTab('contact')}
+                className="bg-white px-8 py-3 rounded-xl shadow-premium text-cyan-600 font-bold hover:shadow-premium-hover transition-all border border-cyan-50"
+            >
+                Contact Support
+            </button>
         </div>
     </div>
 );
 
-const AvailabilityCalendar = () => {
-    const [currentMonth, setCurrentMonth] = useState(() => startOfMonth(new Date()));
-    const [selectedRange, setSelectedRange] = useState({ from: undefined, to: undefined });
-    const [isMobile, setIsMobile] = useState(false);
-
-    // Detect mobile
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 768);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
-
-    // Convert MOCK_BOOKED_DATES to Date objects
-    const blockedDates = useMemo(() => MOCK_BOOKED_DATES.map(d => startOfDay(new Date(d))), []);
-
-    const isDateBlocked = useCallback((date) => {
-        const dateNormalized = startOfDay(date);
-        return blockedDates.some(b => isSameDay(b, dateNormalized));
-    }, [blockedDates]);
-
-    const isCheckoutOnly = useCallback((date) => {
-        if (!isDateBlocked(date)) return false;
-        const previousDay = addDays(date, -1);
-        return !isDateBlocked(previousDay) && !isBefore(previousDay, startOfDay(new Date()));
-    }, [isDateBlocked]);
-
-    const handleDayClick = (day) => {
-        const dayNormalized = startOfDay(day);
-        if (isBefore(dayNormalized, startOfDay(new Date()))) return;
-
-        const isBlocked = isDateBlocked(day);
-        const isCheckoutOnlyDate = isCheckoutOnly(day);
-
-        if (selectedRange.from && !selectedRange.to) {
-            // Selecting end date
-            if (isBefore(dayNormalized, startOfDay(selectedRange.from))) {
-                if (isBlocked) return;
-                setSelectedRange({ from: day, to: undefined });
-            } else if (isSameDay(dayNormalized, startOfDay(selectedRange.from))) {
-                setSelectedRange({ from: undefined, to: undefined });
-            } else {
-                // Check for blocked dates in range
-                let dayToCheck = addDays(selectedRange.from, 1);
-                let hasBlockedInRange = false;
-                while (isBefore(dayToCheck, dayNormalized)) {
-                    if (isDateBlocked(dayToCheck)) {
-                        hasBlockedInRange = true;
-                        break;
-                    }
-                    dayToCheck = addDays(dayToCheck, 1);
-                }
-
-                if (!hasBlockedInRange && (!isBlocked || isCheckoutOnlyDate)) {
-                    setSelectedRange({ from: selectedRange.from, to: day });
-                } else if (!isBlocked) {
-                    setSelectedRange({ from: day, to: undefined });
-                }
-            }
-        } else {
-            if (isBlocked) return;
-            setSelectedRange({ from: day, to: undefined });
-        }
-    };
-
-    const renderMonth = (monthDate, showHeader = true) => {
-        const monthStart = startOfMonth(monthDate);
-        const monthEnd = endOfMonth(monthDate);
-        const startDate = startOfWeek(monthStart);
-        const endDate = endOfWeek(monthEnd);
-        const calendarDays = eachDayOfInterval({ start: startDate, end: endDate });
-
-        return (
-            <div className="w-full">
-                {showHeader && (
-                    <div className="text-lg font-bold text-gray-900 mb-6 text-center">
-                        {format(monthDate, "MMMM yyyy")}
-                    </div>
-                )}
-                <div className="grid grid-cols-7 mb-4">
-                    {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(d => (
-                        <div key={d} className="text-[11px] font-bold text-gray-400 text-center uppercase tracking-wider">
-                            {d}
-                        </div>
-                    ))}
-                </div>
-                <div className="grid grid-cols-7 gap-y-1">
-                    {calendarDays.map((day, idx) => {
-                        const isCurrentMonth = isSameDay(day, monthStart) || (isAfter(day, monthStart) && isBefore(day, monthEnd)) || isSameDay(day, monthEnd);
-                        if (!isCurrentMonth) return <div key={idx} className="h-10 w-full" />;
-
-                        const dayNormalized = startOfDay(day);
-                        const isBlocked = isDateBlocked(day);
-                        const isPast = isBefore(dayNormalized, startOfDay(new Date()));
-                        const isCheckoutOnlyDate = isCheckoutOnly(day);
-                        const isSelectingEndDate = !!(selectedRange.from && !selectedRange.to);
-                        const isDisabled = isPast || (isBlocked && (!isCheckoutOnlyDate || !isSelectingEndDate));
-
-                        const isSelectedStart = selectedRange.from && isSameDay(dayNormalized, startOfDay(selectedRange.from));
-                        const isSelectedEnd = selectedRange.to && isSameDay(dayNormalized, startOfDay(selectedRange.to));
-                        const isInRange = selectedRange.from && selectedRange.to && isAfter(dayNormalized, startOfDay(selectedRange.from)) && isBefore(dayNormalized, startOfDay(selectedRange.to));
-
-                        let containerClass = "relative h-11 w-full flex items-center justify-center";
-                        if (isInRange) containerClass += " bg-cyan-50";
-                        else if (isSelectedStart && selectedRange.to) containerClass += " bg-gradient-to-r from-transparent from-50% to-cyan-50 to-50%";
-                        else if (isSelectedEnd && selectedRange.from) containerClass += " bg-gradient-to-l from-transparent from-50% to-cyan-50 to-50%";
-
-                        let buttonClass = "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium relative z-10 transition-all border border-transparent";
-                        if (isDisabled) {
-                            buttonClass += isBlocked && !isCheckoutOnlyDate ? " text-gray-300 bg-gray-50 cursor-not-allowed line-through" : " text-gray-200 cursor-not-allowed";
-                        } else if (isSelectedStart || isSelectedEnd) {
-                            buttonClass += " bg-gray-900 text-white shadow-lg font-bold";
-                        } else if (isInRange) {
-                            buttonClass += " text-cyan-700 hover:bg-cyan-100";
-                        } else if (isCheckoutOnlyDate && isSelectingEndDate) {
-                            buttonClass += " text-gray-600 bg-gray-50 border-dashed border-gray-300 hover:border-gray-900";
-                        } else {
-                            buttonClass += " hover:border-gray-900 hover:bg-gray-50 text-gray-700";
-                            if (isSameDay(day, new Date())) buttonClass += " font-bold after:content-[''] after:absolute after:bottom-1.5 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-cyan-500 after:rounded-full";
-                        }
-
-                        return (
-                            <div key={idx} className={containerClass}>
-                                <button className={buttonClass} onClick={() => handleDayClick(day)} disabled={isDisabled}>
-                                    {format(day, "d")}
-                                </button>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-        );
-    };
-
-    return (
-        <div className="max-w-7xl mx-auto px-4 py-12">
-            <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">Plan Your Stay</h2>
-                <p className="text-gray-500 max-w-xl mx-auto">
-                    Check our real-time availability below. Dates marked with a line are already booked.
-                </p>
-            </div>
-
-            <div className="bg-white rounded-3xl shadow-premium p-6 md:p-12 border border-gray-50">
-                {isMobile ? (
-                    <div className="space-y-12 max-w-md mx-auto">
-                        <div className="flex justify-between items-center mb-6">
-                            <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-2 hover:bg-gray-50 rounded-full">
-                                <ChevronLeft size={24} />
-                            </button>
-                            <span className="font-bold text-lg">{format(currentMonth, "MMMM yyyy")}</span>
-                            <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-2 hover:bg-gray-50 rounded-full">
-                                <ChevronRight size={24} />
-                            </button>
-                        </div>
-                        {renderMonth(currentMonth, false)}
-                    </div>
-                ) : (
-                    <div className="relative">
-                        <div className="absolute top-0 inset-x-0 flex justify-between px-2">
-                            <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-2 hover:bg-gray-50 rounded-full transition-colors">
-                                <ChevronLeft size={24} />
-                            </button>
-                            <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-2 hover:bg-gray-50 rounded-full transition-colors">
-                                <ChevronRight size={24} />
-                            </button>
-                        </div>
-                        <div className="flex gap-16 justify-center">
-                            <div className="flex-1 max-w-sm">{renderMonth(currentMonth)}</div>
-                            <div className="flex-1 max-w-sm">{renderMonth(addMonths(currentMonth, 1))}</div>
-                        </div>
-                    </div>
-                )}
-
-                <div className="mt-12 pt-8 border-t border-gray-100 flex flex-wrap items-center justify-between gap-6">
-                    <div className="flex gap-6 text-sm text-gray-500">
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full bg-white border border-gray-300"></div>
-                            <span>Available</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full bg-gray-50 border border-gray-100 line-through text-gray-300"></div>
-                            <span>Booked</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full bg-gray-900"></div>
-                            <span>Selected</span>
-                        </div>
-                    </div>
-
-                    {selectedRange.from && (
-                        <div className="bg-cyan-50 px-6 py-3 rounded-2xl flex items-center gap-4 animate-in fade-in slide-in-from-bottom-2">
-                            <div className="text-cyan-800 font-medium">
-                                {format(selectedRange.from, "MMM d")}
-                                {selectedRange.to ? ` — ${format(selectedRange.to, "MMM d")}` : " — Select end date"}
-                            </div>
-                            {selectedRange.to && (
-                                <button onClick={() => setSelectedRange({ from: undefined, to: undefined })} className="text-cyan-600 hover:text-cyan-800">
-                                    <X size={18} />
-                                </button>
-                            )}
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-};
 
 const ContactSection = () => (
     <div className="bg-gray-50 rounded-3xl p-8 md:p-16 text-center max-w-4xl mx-auto">
@@ -763,7 +697,7 @@ export default function App() {
                             </div>
 
                             <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-                                {VILLAS.map(villa =>
+                                {VILLAS.map((villa, index) =>
                                     <VillaCard key={villa.id} villa={villa} />)}
                             </div>
                         </div>
@@ -838,30 +772,21 @@ export default function App() {
                                 experience—fresh, clean, and revitalizing.</p>
                         </div>
                         <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-                            {VILLAS.map(villa =>
+                            {VILLAS.map((villa, index) =>
                                 <VillaCard key={villa.id} villa={villa} />)}
                         </div>
                     </div>
                 )}
 
                 {activeTab === 'availability' && (
-                    <div className="pt-32 pb-24 max-w-7xl mx-auto px-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <div className="text-center mb-12">
-                            <h1 className="text-4xl font-bold text-gray-900 mb-4">Plan Your Stay</h1>
-                            <p className="text-gray-500 max-w-2xl mx-auto">Check our real-time availability below. Dates marked
-                                in red are already booked via Airbnb or Booking.com.</p>
+                    <div className="pt-32 pb-24 max-w-7xl mx-auto px-4">
+                        <div className="text-center mb-16">
+                            <h1 className="text-4xl font-bold text-gray-900 mb-6 tracking-tight">Plan Your Stay</h1>
+                            <p className="text-xl text-gray-500 max-w-2xl mx-auto font-light leading-relaxed">
+                                Check our real-time availability below. Dates marked in red are already booked via Airbnb or Booking.com.
+                            </p>
                         </div>
-                        <AvailabilityCalendar />
-                        <div className="mt-16 max-w-3xl mx-auto text-center bg-gray-50 p-8 rounded-2xl border border-gray-100">
-                            <h3 className="font-bold text-lg mb-2">Need help with your dates?</h3>
-                            <p className="text-gray-600 mb-6">Sometimes we have cancellations or waiting lists. Contact us
-                                directly to double check.</p>
-                            <button onClick={() => setActiveTab('contact')}
-                                className="text-cyan-600 font-bold hover:text-cyan-700 underline"
-                            >
-                                Contact Support
-                            </button>
-                        </div>
+                        <AvailabilitySection setActiveTab={setActiveTab} />
                     </div>
                 )}
 
