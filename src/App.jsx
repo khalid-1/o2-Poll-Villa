@@ -525,24 +525,32 @@ export default function App() {
                         </div>
 
                         {/* Amenities Highlights */}
-                        <div className="bg-gray-50 py-16 md:py-32 rounded-3xl mx-4 my-8">
-                            <div className="max-w-7xl mx-auto px-4">
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-                                    {[
-                                        { icon: Wifi, label: "High-Speed Wifi" },
-                                        { icon: Droplets, label: "Private Pool" },
-                                        { icon: Coffee, label: "Breakfast Option" },
-                                        { icon: Car, label: "Free Parking" }
-                                    ].map((item, idx) => (
-                                        <div key={idx}
-                                            className="flex flex-col items-center text-center p-5 md:p-8 bg-white rounded-3xl shadow-premium hover:shadow-premium-hover transition-all duration-300 hover:-translate-y-2 group">
-                                            <div className="p-3 md:p-5 bg-cyan-50 rounded-2xl text-cyan-600 mb-4 md:mb-6 group-hover:bg-cyan-600 group-hover:text-white transition-colors duration-300">
-                                                <item.icon size={28} className="md:w-9 md:h-9" />
-                                            </div>
-                                            <h3 className="font-bold text-gray-900 text-sm md:text-lg">{item.label}</h3>
+                        {/* Airbnb-style Amenities Section */}
+                        <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
+                            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">What this place offers</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-16">
+                                {[
+                                    { icon: Droplets, label: "Private outdoor pool - available all year, open 24 hours, infinity" },
+                                    { icon: Wifi, label: "Fast wifi – 502 Mbps" },
+                                    { icon: Car, label: "Free driveway parking on premises – 2 spaces" },
+                                    { icon: Tv, label: "55\" HDTV with Netflix, premium cable, standard cable" },
+                                    { icon: Wind, label: "Central air conditioning" },
+                                    { icon: Coffee, label: "Kitchen" },
+                                    { icon: Users, label: "Private entrance" },
+                                    { icon: Calendar, label: "Long term stays allowed" },
+                                ].map((item, idx) => (
+                                    <div key={idx} className="flex items-start gap-4 p-4 border-b border-gray-100 last:border-0 hover:bg-gray-50 rounded-lg transition-colors">
+                                        <div className="text-gray-900 mt-1">
+                                            <item.icon size={28} strokeWidth={1.5} />
                                         </div>
-                                    ))}
-                                </div>
+                                        <span className="text-gray-700 text-lg font-light leading-snug">{item.label}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-8">
+                                <button className="px-6 py-3 border border-black rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+                                    Show all 32 amenities
+                                </button>
                             </div>
                         </div>
 
