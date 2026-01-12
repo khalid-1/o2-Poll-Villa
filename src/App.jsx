@@ -141,7 +141,7 @@ const VILLAS = [
         id: 1,
         name: "O2 Pool Villa",
         description: "A breath of fresh air. This 3-bedroom villa features an infinity pool, open-air living spaces, and a modern design focused on ventilation and light.",
-        price: "1,500 - 2,000",
+        price: "1,500",
         rating: 4.92,
         reviews: 128,
         guests: 6,
@@ -159,7 +159,7 @@ const VILLAS = [
         id: 2,
         name: "Villa 17",
         description: "Immerse yourself in luxury. Villa Ozone offers a larger garden area, a jacuzzi integrated into the main pool, and a rooftop terrace for sunset views.",
-        price: "1,500 - 2,000",
+        price: "1,500",
         rating: 4.98,
         reviews: 86,
         guests: 8,
@@ -370,11 +370,12 @@ const VillaCard = ({ villa }) => (
 
             <div className="flex items-end justify-between border-t border-gray-100 pt-4">
                 <div>
+                    <span className="text-xs text-gray-500 font-medium block mb-0.5">From</span>
                     <span className="text-xl font-bold text-gray-900">AED {villa.price}</span>
                     <span className="text-gray-500 text-sm font-medium"> / night</span>
                 </div>
                 <button
-                    className="px-6 py-3 bg-gray-900 text-white rounded-xl font-bold text-sm hover:bg-cyan-600 transition-colors shadow-lg hover:shadow-cyan-200">
+                    className="px-5 py-2.5 md:px-6 md:py-3 bg-gray-900 text-white rounded-xl font-bold text-xs md:text-sm hover:bg-cyan-600 transition-colors shadow-lg hover:shadow-cyan-200">
                     View Details
                 </button>
             </div>
@@ -650,13 +651,13 @@ export default function App() {
                         {/* Airbnb-style Amenities Section */}
                         <div className="max-w-7xl mx-auto px-4 py-16 md:py-24 border-t border-gray-100">
                             <h2 className="text-2xl font-bold text-gray-900 mb-6">What this place offers</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-16 mb-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12 mb-8">
                                 {CATEGORIZED_AMENITIES.flatMap(cat => cat.items).slice(0, 10).map((item, idx) => (
-                                    <div key={idx} className="flex items-center gap-4 py-2">
-                                        <div className="text-gray-900 min-w-8">
-                                            <item.icon size={24} strokeWidth={1} />
+                                    <div key={idx} className="flex items-center gap-4 py-1">
+                                        <div className="text-cyan-600 bg-cyan-50 p-2.5 rounded-xl min-w-10 flex items-center justify-center">
+                                            <item.icon size={22} strokeWidth={1.5} />
                                         </div>
-                                        <span className="text-gray-700 text-base font-light">{item.label}</span>
+                                        <span className="text-gray-700 text-base font-medium">{item.label}</span>
                                     </div>
                                 ))}
                             </div>
@@ -686,11 +687,11 @@ export default function App() {
                                                 <h4 className="font-bold text-gray-900 mb-4 text-base">{category.category}</h4>
                                                 <div className="space-y-4 border-b border-gray-100 pb-6 last:border-0 last:pb-0">
                                                     {category.items.map((item, itemIdx) => (
-                                                        <div key={itemIdx} className="flex items-start gap-4">
-                                                            <div className="text-gray-500 mt-0.5">
-                                                                <item.icon size={24} strokeWidth={1} />
+                                                        <div key={itemIdx} className="flex items-center gap-4">
+                                                            <div className="text-cyan-600 bg-cyan-50 p-2 rounded-lg">
+                                                                <item.icon size={20} strokeWidth={1.5} />
                                                             </div>
-                                                            <span className="text-gray-700 font-light">{item.label}</span>
+                                                            <span className="text-gray-700 font-medium">{item.label}</span>
                                                         </div>
                                                     ))}
                                                 </div>
