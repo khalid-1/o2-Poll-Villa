@@ -150,11 +150,7 @@ const Hero = ({ setActiveTab }) => (
         </div>
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
-            <div
-                className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-4 py-1 rounded-full text-white/90 mb-6 border border-white/20">
-                <Star size={14} className="text-yellow-400 fill-yellow-400" />
-                <span className="text-sm font-medium">Premium Vacation Rentals</span>
-            </div>
+
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
                 Breathe in the <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-200">Luxury</span>
