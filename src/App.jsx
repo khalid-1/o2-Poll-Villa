@@ -11,7 +11,7 @@ import {
     Coffee,
     Tv,
     Car,
-    Check,
+    CheckIcon,
     ChevronLeft,
     ChevronRight,
     Menu,
@@ -223,7 +223,7 @@ const ImageCarousel = ({ images }) => {
 
 const VillaCard = ({ villa }) => (
     <div
-        className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group">
+        className="bg-white rounded-3xl overflow-hidden shadow-premium hover:shadow-premium-hover transition-all duration-500 border border-gray-100 group hover:-translate-y-1">
         <ImageCarousel images={villa.images} />
 
         <div className="p-6">
@@ -259,11 +259,11 @@ const VillaCard = ({ villa }) => (
 
             <div className="flex items-end justify-between border-t border-gray-100 pt-4">
                 <div>
-                    <span className="text-lg font-bold text-gray-900">AED {villa.price}</span>
-                    <span className="text-gray-500 text-sm"> / night</span>
+                    <span className="text-xl font-bold text-gray-900">AED {villa.price}</span>
+                    <span className="text-gray-500 text-sm font-medium"> / night</span>
                 </div>
                 <button
-                    className="px-4 py-2 bg-gray-900 text-white rounded-lg font-medium text-sm hover:bg-cyan-600 transition-colors">
+                    className="px-6 py-3 bg-gray-900 text-white rounded-xl font-bold text-sm hover:bg-cyan-600 transition-colors shadow-lg hover:shadow-cyan-200">
                     View Details
                 </button>
             </div>
@@ -320,21 +320,21 @@ const AvailabilityCalendar = () => {
     }
 
     return (
-        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 max-w-5xl mx-auto">
+        <div className="bg-white rounded-3xl shadow-premium p-8 md:p-10 max-w-5xl mx-auto border border-gray-50">
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900">Availability</h2>
                     <p className="text-gray-500 text-sm mt-1">Synced with Airbnb & Booking.com</p>
                 </div>
 
-                <div className="flex items-center space-x-4 bg-gray-100 rounded-lg p-1">
-                    <button onClick={handlePrevMonth} className="p-2 hover:bg-white rounded-md transition-shadow shadow-sm">
+                <div className="flex items-center space-x-4 bg-gray-50 rounded-2xl p-2">
+                    <button onClick={handlePrevMonth} className="p-3 hover:bg-white rounded-xl transition-all shadow-sm hover:shadow-md">
                         <ChevronLeft size={20} />
                     </button>
-                    <span className="font-semibold text-gray-900 w-32 text-center select-none">
+                    <span className="font-bold text-gray-900 w-36 text-center select-none text-lg">
                         {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
                     </span>
-                    <button onClick={handleNextMonth} className="p-2 hover:bg-white rounded-md transition-shadow shadow-sm">
+                    <button onClick={handleNextMonth} className="p-3 hover:bg-white rounded-xl transition-all shadow-sm hover:shadow-md">
                         <ChevronRight size={20} />
                     </button>
                 </div>
@@ -420,7 +420,7 @@ const ContactSection = () => (
                 </div>
             </div>
 
-            <form className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100" onSubmit={(e) =>
+            <form className="bg-white p-10 rounded-3xl shadow-premium border border-gray-100" onSubmit={(e) =>
                 e.preventDefault()}>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
@@ -519,7 +519,7 @@ export default function App() {
                         </div>
 
                         {/* Amenities Highlights */}
-                        <div className="bg-cyan-50 py-24">
+                        <div className="bg-gray-50 py-32 rounded-3xl mx-4 my-8">
                             <div className="max-w-7xl mx-auto px-4">
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                                     {[
@@ -529,11 +529,11 @@ export default function App() {
                                         { icon: Car, label: "Free Parking" }
                                     ].map((item, idx) => (
                                         <div key={idx}
-                                            className="flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-                                            <div className="p-4 bg-cyan-50 rounded-full text-cyan-600 mb-4">
-                                                <item.icon size={32} />
+                                            className="flex flex-col items-center text-center p-8 bg-white rounded-3xl shadow-premium hover:shadow-premium-hover transition-all duration-300 hover:-translate-y-2 group">
+                                            <div className="p-5 bg-cyan-50 rounded-2xl text-cyan-600 mb-6 group-hover:bg-cyan-600 group-hover:text-white transition-colors duration-300">
+                                                <item.icon size={36} />
                                             </div>
-                                            <h3 className="font-bold text-gray-900">{item.label}</h3>
+                                            <h3 className="font-bold text-gray-900 text-lg">{item.label}</h3>
                                         </div>
                                     ))}
                                 </div>
