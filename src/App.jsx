@@ -19,7 +19,8 @@ import {
     Mail,
     Phone,
     Instagram,
-    Facebook
+    Facebook,
+    ArrowUp
 } from 'lucide-react';
 
 // --- Mock Data ---
@@ -150,8 +151,7 @@ const Hero = ({ setActiveTab }) => (
         </div>
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
-
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
+            <h1 className="text-4xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
                 Breathe in the <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-200">Luxury</span>
             </h1>
@@ -367,7 +367,7 @@ const AvailabilityCalendar = () => {
 };
 
 const ContactSection = () => (
-    <div className="bg-gray-50 rounded-3xl p-8 md:p-12">
+    <div className="bg-gray-50 rounded-3xl p-6 md:p-12">
         <div className="grid md:grid-cols-2 gap-12">
             <div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-6">Contact Us</h2>
@@ -485,14 +485,20 @@ const Footer = () => (
 export default function App() {
     const [activeTab, setActiveTab] = useState('home');
     const [isScrolled, setIsScrolled] = useState(false);
+    const [showScrollTop, setShowScrollTop] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 50);
+            setShowScrollTop(window.scrollY > 400);
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     return (
         <div className="min-h-screen bg-white font-sans text-gray-900 selection:bg-cyan-100">
@@ -519,9 +525,9 @@ export default function App() {
                         </div>
 
                         {/* Amenities Highlights */}
-                        <div className="bg-gray-50 py-32 rounded-3xl mx-4 my-8">
+                        <div className="bg-gray-50 py-16 md:py-32 rounded-3xl mx-4 my-8">
                             <div className="max-w-7xl mx-auto px-4">
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
                                     {[
                                         { icon: Wifi, label: "High-Speed Wifi" },
                                         { icon: Droplets, label: "Private Pool" },
@@ -529,18 +535,18 @@ export default function App() {
                                         { icon: Car, label: "Free Parking" }
                                     ].map((item, idx) => (
                                         <div key={idx}
-                                            className="flex flex-col items-center text-center p-8 bg-white rounded-3xl shadow-premium hover:shadow-premium-hover transition-all duration-300 hover:-translate-y-2 group">
-                                            <div className="p-5 bg-cyan-50 rounded-2xl text-cyan-600 mb-6 group-hover:bg-cyan-600 group-hover:text-white transition-colors duration-300">
-                                                <item.icon size={36} />
+                                            className="flex flex-col items-center text-center p-5 md:p-8 bg-white rounded-3xl shadow-premium hover:shadow-premium-hover transition-all duration-300 hover:-translate-y-2 group">
+                                            <div className="p-3 md:p-5 bg-cyan-50 rounded-2xl text-cyan-600 mb-4 md:mb-6 group-hover:bg-cyan-600 group-hover:text-white transition-colors duration-300">
+                                                <item.icon size={28} className="md:w-9 md:h-9" />
                                             </div>
-                                            <h3 className="font-bold text-gray-900 text-lg">{item.label}</h3>
+                                            <h3 className="font-bold text-gray-900 text-sm md:text-lg">{item.label}</h3>
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         </div>
 
-                        <div className="max-w-4xl mx-auto px-4 py-24">
+                        <div className="max-w-4xl mx-auto px-4 py-16 md:py-24">
                             <ContactSection />
                         </div>
                     </div>
@@ -589,6 +595,14 @@ export default function App() {
             </main>
 
             <Footer />
+
+            {/* Scroll to Top Button */}
+            <button
+                onClick={scrollToTop}
+                className={`fixed bottom-8 right-8 p-4 bg-cyan-600 text-white rounded-full shadow-premium hover:shadow-premium-hover hover:bg-cyan-700 transition-all duration-300 z-50 ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}
+            >
+                <ArrowUp size={24} />
+            </button>
         </div>
     );
 }
