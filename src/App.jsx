@@ -189,7 +189,7 @@ const MOCK_BOOKED_DATES = [
 const Navigation = ({ activeTab, setActiveTab, isScrolled }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    const isSolid = isScrolled || activeTab !== 'home';
+    const isSolid = isScrolled || activeTab !== 'home' || isMobileMenuOpen;
 
     return (
         <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isSolid ? 'bg-white shadow-md py-4'
@@ -233,21 +233,31 @@ const Navigation = ({ activeTab, setActiveTab, isScrolled }) => {
             {/* Mobile Menu Dropdown */}
             {isMobileMenuOpen && (
                 <div
-                    className="md:hidden absolute top-full left-0 right-0 bg-white shadow-xl border-t border-gray-100 py-4 px-4 flex flex-col space-y-4 animate-in slide-in-from-top-5">
-                    {['home', 'villas', 'availability', 'contact'].map((item) => (
-                        <button key={item} onClick={() => {
-                            setActiveTab(item);
-                            setIsMobileMenuOpen(false);
-                        }}
-                            className={`text-lg font-medium text-left capitalize ${activeTab === item ? 'text-cyan-600' :
-                                'text-gray-600'}`}
-                        >
-                            {item}
+                    className="md:hidden absolute top-full left-0 right-0 bg-white shadow-2xl border-t border-gray-100 p-6 flex flex-col space-y-6 animate-in slide-in-from-top-5">
+                    <div className="flex flex-col space-y-4">
+                        {['home', 'villas', 'availability', 'contact'].map((item) => (
+                            <button key={item} onClick={() => {
+                                setActiveTab(item);
+                                setIsMobileMenuOpen(false);
+                            }}
+                                className={`text-xl font-semibold text-left capitalize transition-colors ${activeTab === item ? 'text-cyan-600' :
+                                    'text-gray-800'}`}
+                            >
+                                {item}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="pt-4 border-t border-gray-100">
+                        <button
+                            onClick={() => {
+                                setActiveTab('availability');
+                                setIsMobileMenuOpen(false);
+                            }}
+                            className="bg-cyan-600 text-white py-4 rounded-2xl font-bold w-full shadow-lg shadow-cyan-100 flex items-center justify-center gap-2">
+                            <Calendar size={20} />
+                            Check Availability
                         </button>
-                    ))}
-                    <button className="bg-cyan-600 text-white py-3 rounded-lg font-bold w-full">
-                        Check Availability
-                    </button>
+                    </div>
                 </div>
             )}
         </nav>
