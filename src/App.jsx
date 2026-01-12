@@ -230,33 +230,59 @@ const Navigation = ({ activeTab, setActiveTab, isScrolled }) => {
                 </div>
             </div>
 
-            {/* Mobile Menu Dropdown */}
+            {/* Full Screen Mobile Menu Overlay */}
             {isMobileMenuOpen && (
-                <div
-                    className="md:hidden absolute top-full left-0 right-0 bg-white shadow-2xl border-t border-gray-100 p-6 flex flex-col space-y-6 animate-in slide-in-from-top-5">
-                    <div className="flex flex-col space-y-4">
-                        {['home', 'villas', 'availability', 'contact'].map((item) => (
-                            <button key={item} onClick={() => {
-                                setActiveTab(item);
-                                setIsMobileMenuOpen(false);
-                            }}
-                                className={`text-xl font-semibold text-left capitalize transition-colors ${activeTab === item ? 'text-cyan-600' :
-                                    'text-gray-800'}`}
-                            >
-                                {item}
-                            </button>
-                        ))}
+                <div className="fixed inset-0 z-[100] bg-white animate-in fade-in duration-300 pointer-events-auto">
+                    {/* Header inside menu */}
+                    <div className="flex justify-between items-center px-4 py-4 border-b border-gray-50">
+                        <div className="flex items-center" onClick={() => { setActiveTab('home'); setIsMobileMenuOpen(false); }}>
+                            <span className="text-2xl font-bold tracking-tight text-gray-900">
+                                O<span className="text-xs align-baseline relative top-1">2</span> <span className="text-cyan-600">Pool Villa</span>
+                            </span>
+                        </div>
+                        <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-gray-900 hover:bg-gray-50 rounded-full transition-colors">
+                            <X size={32} strokeWidth={1.5} />
+                        </button>
                     </div>
-                    <div className="pt-4 border-t border-gray-100">
+
+                    {/* Menu Content */}
+                    <div className="h-full flex flex-col justify-center items-center px-6 pb-32">
+                        <div className="flex flex-col items-center space-y-8 mb-12">
+                            {['home', 'villas', 'availability', 'contact'].map((item, idx) => (
+                                <button
+                                    key={item}
+                                    onClick={() => {
+                                        setActiveTab(item);
+                                        setIsMobileMenuOpen(false);
+                                    }}
+                                    className={`text-4xl font-bold capitalize transition-all duration-300 hover:scale-110 ${activeTab === item ? 'text-cyan-600' : 'text-gray-900'
+                                        }`}
+                                    style={{ animationDelay: `${idx * 100}ms` }}
+                                >
+                                    {item}
+                                </button>
+                            ))}
+                        </div>
+
                         <button
                             onClick={() => {
                                 setActiveTab('availability');
                                 setIsMobileMenuOpen(false);
                             }}
-                            className="bg-cyan-600 text-white py-4 rounded-2xl font-bold w-full shadow-lg shadow-cyan-100 flex items-center justify-center gap-2">
-                            <Calendar size={20} />
-                            Check Availability
+                            className="bg-cyan-600 text-white py-4 px-12 rounded-full font-bold text-xl shadow-xl shadow-cyan-100 flex items-center gap-3 transition-transform hover:scale-105 active:scale-95"
+                        >
+                            <Calendar size={24} />
+                            Book Your Stay
                         </button>
+
+                        <div className="absolute bottom-12 flex gap-8">
+                            <a href="https://www.instagram.com/o2poolvilla/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-600 transition-colors">
+                                <Instagram size={32} />
+                            </a>
+                            <button className="text-gray-400 hover:text-cyan-600 transition-colors">
+                                <Facebook size={32} />
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
