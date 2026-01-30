@@ -49,6 +49,7 @@ import {
 import BookingCalendar from './components/BookingCalendar';
 import { GlowingCard } from './components/ui/SpotlightCard';
 import { FadeInWhenVisible, StaggerContainer, StaggerItem } from './components/ui/AnimatedButton';
+import ContactForm from './components/ContactForm';
 
 const CATEGORIZED_AMENITIES = [
     {
@@ -579,48 +580,56 @@ const AvailabilitySection = ({ setActiveTab }) => (
 
 
 const ContactSection = () => (
-    <div className="bg-gray-50 rounded-3xl p-8 md:p-16 text-center max-w-4xl mx-auto">
+    <div className="bg-gray-50 rounded-3xl p-8 md:p-16 text-center max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold text-gray-900 mb-6">Contact Us</h2>
         <p className="text-gray-600 mb-12 leading-relaxed max-w-2xl mx-auto">
             Have questions about the villa or the local area? We're here to help make your stay perfect.
             Reach out directly for the best rates.
         </p>
 
-        <div className="grid sm:grid-cols-3 gap-8 md:gap-12 items-start">
-            <div className="flex flex-col items-center">
-                <div className="p-4 bg-white rounded-2xl shadow-premium text-cyan-600 mb-4">
-                    <MapPin size={28} />
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+            {/* Left Column: Contact Details */}
+            <div className="space-y-8">
+                <div className="grid sm:grid-cols-1 gap-6">
+                    <div className="flex flex-col items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div className="p-4 bg-cyan-50 rounded-full text-cyan-600 mb-4">
+                            <MapPin size={24} />
+                        </div>
+                        <h3 className="font-bold text-gray-900 mb-1">Location</h3>
+                        <p className="text-gray-500 text-sm">3 Al Marasi St - Al Jazeera Al Hamra<br />Ras Al Khaimah</p>
+                    </div>
+
+                    <div className="flex flex-col items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div className="p-4 bg-cyan-50 rounded-full text-cyan-600 mb-4">
+                            <Mail size={24} />
+                        </div>
+                        <h3 className="font-bold text-gray-900 mb-1">Email</h3>
+                        <p className="text-gray-500 text-sm">reservations@o2poolvilla.com</p>
+                    </div>
+
+                    <div className="flex flex-col items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div className="p-4 bg-cyan-50 rounded-full text-cyan-600 mb-4">
+                            <Phone size={24} />
+                        </div>
+                        <h3 className="font-bold text-gray-900 mb-1">Phone</h3>
+                        <p className="text-gray-500 text-sm">+971 50 400 0576</p>
+                    </div>
                 </div>
-                <h3 className="font-bold text-gray-900 mb-1">Location</h3>
-                <p className="text-gray-500 text-sm">3 Al Marasi St - Al Jazeera Al Hamra<br />Ras Al Khaimah</p>
+
+                <div className="flex justify-center gap-6 pt-4">
+                    <a href="https://www.instagram.com/o2poolvilla/" target="_blank" rel="noopener noreferrer"
+                        className="p-4 bg-white rounded-2xl text-gray-600 shadow-premium hover:text-cyan-600 hover:shadow-premium-hover transition-all inline-flex items-center justify-center">
+                        <Instagram size={32} />
+                    </a>
+                    <button
+                        className="p-4 bg-white rounded-2xl text-gray-600 shadow-premium hover:text-cyan-600 hover:shadow-premium-hover transition-all">
+                        <Facebook size={32} />
+                    </button>
+                </div>
             </div>
 
-            <div className="flex flex-col items-center">
-                <div className="p-4 bg-white rounded-2xl shadow-premium text-cyan-600 mb-4">
-                    <Mail size={28} />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-1">Email</h3>
-                <p className="text-gray-500 text-sm">reservations@o2poolvilla.com</p>
-            </div>
-
-            <div className="flex flex-col items-center">
-                <div className="p-4 bg-white rounded-2xl shadow-premium text-cyan-600 mb-4">
-                    <Phone size={28} />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-1">Phone</h3>
-                <p className="text-gray-500 text-sm">+971 50 400 0576</p>
-            </div>
-        </div>
-
-        <div className="flex justify-center gap-6 mt-12">
-            <a href="https://www.instagram.com/o2poolvilla/" target="_blank" rel="noopener noreferrer"
-                className="p-4 bg-white rounded-2xl text-gray-600 shadow-premium hover:text-cyan-600 hover:shadow-premium-hover transition-all inline-flex items-center justify-center">
-                <Instagram size={32} />
-            </a>
-            <button
-                className="p-4 bg-white rounded-2xl text-gray-600 shadow-premium hover:text-cyan-600 hover:shadow-premium-hover transition-all">
-                <Facebook size={32} />
-            </button>
+            {/* Right Column: Interactive Form */}
+            <ContactForm />
         </div>
     </div>
 );
@@ -650,34 +659,13 @@ const Footer = () => (
     </footer>
 );
 
-export default function App() {
-    const [activeTab, setActiveTab] = useState('home');
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [showScrollTop, setShowScrollTop] = useState(false);
-    const [isAmenitiesModalOpen, setIsAmenitiesModalOpen] = useState(false);
+import AdminLayout from './layouts/AdminLayout';
+import Login from './pages/admin/Login';
+import VillaSelection from './pages/admin/VillaSelection';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
-            setShowScrollTop(window.scrollY > 400);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    // Prevent scrolling when modal is open
-    useEffect(() => {
-        if (isAmenitiesModalOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-    }, [isAmenitiesModalOpen]);
-
+function LandingPage({ activeTab, setActiveTab, isScrolled, showScrollTop, isAmenitiesModalOpen, setIsAmenitiesModalOpen, scrollToTop }) {
     return (
         <div className="min-h-screen bg-white font-sans text-gray-900 selection:bg-cyan-100">
             <Navigation activeTab={activeTab} setActiveTab={setActiveTab} isScrolled={isScrolled} />
@@ -809,3 +797,48 @@ export default function App() {
         </div>
     );
 }
+function App() {
+    const [activeTab, setActiveTab] = useState('home');
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [showScrollTop, setShowScrollTop] = useState(false);
+    const [isAmenitiesModalOpen, setIsAmenitiesModalOpen] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+            setShowScrollTop(window.scrollY > 500);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const landingPageProps = {
+        activeTab,
+        setActiveTab,
+        isScrolled,
+        showScrollTop,
+        isAmenitiesModalOpen,
+        setIsAmenitiesModalOpen,
+        scrollToTop
+    };
+
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<LandingPage {...landingPageProps} />} />
+                <Route path="/admin" element={<AdminLayout />}>
+                    <Route index element={<Navigate to="/admin/login" replace />} />
+                    <Route path="login" element={<Login />} />
+                    <Route path="select-villa" element={<VillaSelection />} />
+                    <Route path="dashboard" element={<AdminDashboard />} />
+                </Route>
+            </Routes>
+        </BrowserRouter>
+    );
+}
+
+export default App;

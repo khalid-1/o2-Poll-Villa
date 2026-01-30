@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Prevent double-tap zoom on buttons and inputs */
+button,
+input,
+select,
+textarea,
+a {
+    touch-action: manipulation;
+}
+
+/* Prevent auto-zoom on iOS inputs by ensuring font-size is at least 16px */
+@media screen and (max-width: 768px) {
+
+    input,
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+}
+
 @font-face {
     font-family: 'Airbnb Cereal';
     src: url('./assets/fonts/AirbnbCereal_W_Lt.otf') format('opentype');
@@ -50,6 +69,9 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
+
+    /* iOS Safe Area Insets - for notch/Dynamic Island */
+    /* Handled in components */
 }
 
 /* Custom Animations */
